@@ -13,12 +13,12 @@ sp = spotipy.Spotify(client_credentials_manager)
 def getTrackIds(user ,playlist_id):
     ids = []
     playlist = sp.user_playlist(user, playlist_id)
-    for itemin playlist['tracks']['items']:
+    for item in playlist['tracks']['items']:
         track = item['track']
         ids.append(track['id'])
     return ids
 
-ids = getTrackIDs('angelicadietzel', '4R0BZVh27NUJhHGLNitU08')
+ids = getTrackIds('toqwtmvnrx6l0ebvbeyqnrfog', '3lHhBsGvfyd6GuJa6SIj8L')
 
 def getTrackFeatures(id):
     meta = sp.track(id)
@@ -45,3 +45,14 @@ def getTrackFeatures(id):
 
     track = [name, album, artist, release_date, length, popularity, danceability, acousticness, energy, instrumentalness, liveness, loudness, speechiness, tempo, time_signature ]
     return track
+
+# loop over tracks and apply function
+tracks = []
+for i in range(len(ids)):
+    time.sleep(.5)
+    track = getTrackFeatures(ids[i])
+    tracks.append(track)
+
+# create dataset
+df = pd.DataFrame(tracks, columns = ['name', 'album', 'artist', 'release_date', 'length', 'popularity', 'acousticness', 'danceability', 'energy', 'intrumentalness', 'liveness', 'loudness', 'speechiness', 'tempo', 'time_signature'])
+df.to_csv("spotify.csv", sep=",")
